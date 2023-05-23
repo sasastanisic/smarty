@@ -8,6 +8,7 @@ public class SmartyBackendApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SmartyBackendApplication.class, args);
+        System.out.println("TEST");
     }
 
 }
