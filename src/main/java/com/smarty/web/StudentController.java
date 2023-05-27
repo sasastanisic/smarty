@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    @PreAuthorize("hasRole('PROFESSOR')")
     @PostMapping
     public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody StudentRequestDTO studentDTO) {
         return ResponseEntity.ok(studentService.createStudent(studentDTO));
@@ -38,11 +40,13 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
+    @PreAuthorize("hasRole('PROFESSOR')")
     @PutMapping("/{id}")
     public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateDTO studentDTO) {
         return ResponseEntity.ok(studentService.updateStudent(id, studentDTO));
     }
 
+    @PreAuthorize("hasRole('PROFESSOR')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(@PathVariable Long id) {
