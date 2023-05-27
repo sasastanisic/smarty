@@ -1,5 +1,7 @@
 package com.smarty.domain.student.model;
 
+import com.smarty.domain.account.model.AccountRequestDTO;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +23,10 @@ public record StudentRequestDTO(
 
         @Min(value = 1, message = "Value of semester is minimum 1")
         @Max(value = 8, message = "Value of semester is maximum 8")
-        int semester
+        int semester,
+
+        @Valid
+        AccountRequestDTO account
 
 ) {
 

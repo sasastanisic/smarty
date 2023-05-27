@@ -1,5 +1,6 @@
 package com.smarty.domain.student.service;
 
+import com.smarty.domain.account.service.AccountService;
 import com.smarty.domain.student.entity.Student;
 import com.smarty.domain.student.model.StudentRequestDTO;
 import com.smarty.domain.student.model.StudentResponseDTO;
@@ -22,17 +23,22 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
+    private final AccountService accountService;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, StudentMapper studentMapper) {
+    public StudentServiceImpl(StudentRepository studentRepository,
+                              StudentMapper studentMapper,
+                              AccountService accountService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
+        this.accountService = accountService;
     }
 
     @Override
     public StudentResponseDTO createStudent(StudentRequestDTO studentDTO) {
         Student student = studentMapper.toStudent(studentDTO);
 
+        accountService.existsByEmail(studentDTO.account().email());
         validateIndex(studentDTO.index());
         studentRepository.save(student);
 
