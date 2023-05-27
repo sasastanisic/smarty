@@ -25,10 +25,7 @@ public class Student {
     private int semester;
 
     @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
+    private double averageGrade;
 
     public Student() {
     }
@@ -81,20 +78,12 @@ public class Student {
         this.semester = semester;
     }
 
-    public String getEmail() {
-        return email;
+    public double getAverageGrade() {
+        return averageGrade;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setAverageGrade(double averageGrade) {
+        this.averageGrade = averageGrade;
     }
 
 }
