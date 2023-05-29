@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record StudentRequestDTO(
 
@@ -24,6 +25,9 @@ public record StudentRequestDTO(
         @Min(value = 1, message = "Value of semester is minimum 1")
         @Max(value = 8, message = "Value of semester is maximum 8")
         int semester,
+
+        @NotNull(message = "Major can't be null")
+        Long majorId,
 
         @Valid
         AccountRequestDTO account
