@@ -16,7 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -71,6 +73,36 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentResponseDTO getStudentById(Long id) {
         return studentMapper.toStudentResponseDTO(getById(id));
+    }
+
+    @Override
+    public List<StudentResponseDTO> getStudentsByMajor(Long majorId) {
+        List<Student> studentsByMajor = studentRepository.findStudentsByMajor_Id(majorId);
+        majorService.existsById(majorId);
+
+        if (studentsByMajor.isEmpty()) {
+            throw new NotFoundException("List of students by major is empty");
+        }
+
+        return studentsByMajor
+                .stream()
+                .map(studentMapper::toStudentResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentResponseDTO> getStudentsByStudyStatus(Long statusId) {
+        List<Student> studentsByStudyStatus = studentRepository.findStudentsByStatus_Id(statusId);
+        statusService.existsById(statusId);
+
+        if (studentsByStudyStatus.isEmpty()) {
+            throw new NotFoundException("List of students by study status is empty");
+        }
+
+        return studentsByStudyStatus
+                .stream()
+                .map(studentMapper::toStudentResponseDTO)
+                .collect(Collectors.toList());
     }
 
     private Student getById(Long id) {

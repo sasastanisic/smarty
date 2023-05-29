@@ -6,4 +6,6 @@ public interface StatusService {
 
     Status getStatusById(Long id);
 
+    void existsById(Long id);
+
 }

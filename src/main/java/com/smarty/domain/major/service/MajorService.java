@@ -17,6 +17,8 @@ public interface MajorService {
 
     Major getById(Long id);
 
+    void existsById(Long id);
+
     MajorResponseDTO updateMajor(Long id, MajorUpdateDTO majorDTO);
 
     void deleteMajor(Long id);

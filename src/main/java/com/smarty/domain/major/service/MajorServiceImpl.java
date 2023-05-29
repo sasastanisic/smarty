@@ -66,6 +66,13 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
+    public void existsById(Long id) {
+        if (!majorRepository.existsById(id)) {
+            throw new NotFoundException(MAJOR_NOT_EXISTS.formatted(id));
+        }
+    }
+
+    @Override
     public MajorResponseDTO updateMajor(Long id, MajorUpdateDTO majorDTO) {
         Major major = getById(id);
         majorMapper.updateMajorFromDTO(majorDTO, major);

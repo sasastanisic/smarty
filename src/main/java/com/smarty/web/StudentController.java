@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/students")
 public class StudentController {
@@ -38,6 +40,18 @@ public class StudentController {
     @GetMapping("/{id}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/by-major/{majorId}")
+    public ResponseEntity<List<StudentResponseDTO>> getStudentsByMajor(@PathVariable Long majorId) {
+        return ResponseEntity.ok(studentService.getStudentsByMajor(majorId));
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/by-status/{statusId}")
+    public ResponseEntity<List<StudentResponseDTO>> getStudentsByStudyStatus(@PathVariable Long statusId) {
+        return ResponseEntity.ok(studentService.getStudentsByStudyStatus(statusId));
     }
 
     @PreAuthorize("hasRole('PROFESSOR')")
