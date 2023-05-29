@@ -2,6 +2,7 @@ package com.smarty.domain.student.service;
 
 import com.smarty.domain.account.service.AccountService;
 import com.smarty.domain.major.service.MajorService;
+import com.smarty.domain.status.service.StatusService;
 import com.smarty.domain.student.entity.Student;
 import com.smarty.domain.student.model.StudentRequestDTO;
 import com.smarty.domain.student.model.StudentResponseDTO;
@@ -25,16 +26,19 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final MajorService majorService;
+    private final StatusService statusService;
     private final AccountService accountService;
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository,
                               StudentMapper studentMapper,
                               MajorService majorService,
+                              StatusService statusService,
                               AccountService accountService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.majorService = majorService;
+        this.statusService = statusService;
         this.accountService = accountService;
     }
 
@@ -42,9 +46,11 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponseDTO createStudent(StudentRequestDTO studentDTO) {
         Student student = studentMapper.toStudent(studentDTO);
         var major = majorService.getById(studentDTO.majorId());
+        var status = statusService.getStatusById(studentDTO.statusId());
         accountService.existsByEmail(studentDTO.account().email());
 
         student.setMajor(major);
+        student.setStatus(status);
         validateIndex(studentDTO.index());
         studentRepository.save(student);
 
@@ -81,9 +87,11 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponseDTO updateStudent(Long id, StudentUpdateDTO studentDTO) {
         Student student = getById(id);
         var major = majorService.getById(studentDTO.majorId());
+        var status = statusService.getStatusById(studentDTO.statusId());
         studentMapper.updateStudentFromDTO(studentDTO, student);
 
         student.setMajor(major);
+        student.setStatus(status);
         studentRepository.save(student);
 
         return studentMapper.toStudentResponseDTO(student);

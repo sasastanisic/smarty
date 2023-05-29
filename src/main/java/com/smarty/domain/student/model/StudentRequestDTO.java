@@ -29,6 +29,9 @@ public record StudentRequestDTO(
         @NotNull(message = "Major can't be null")
         Long majorId,
 
+        @NotNull(message = "Study status can't be null")
+        Long statusId,
+
         @Valid
         AccountRequestDTO account
 

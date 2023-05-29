@@ -1,3 +1,8 @@
+INSERT INTO study_status (id, type)
+VALUES (1, 'Traditional'),
+       (2, 'Online'),
+       (3, 'Hybrid');
+
 INSERT INTO major(id, code, full_name, description, duration)
 VALUES (1, 'SE', 'Software engineering', 'Software engineering major', 4),
        (2, 'IT', 'Information technology', 'Information technology major', 4);
@@ -12,5 +17,5 @@ VALUES (1, 'CS103', 'Algorithms and data structures', 8, 2, 3,
 INSERT INTO account(id, email, password, role)
 VALUES (1, 'sasastanisic4@gmail.com', '$2a$12$IV50fkN2dG7PzTnkcvyj2urBuYzSQZ6rXi6KSG7JOn9NRZX7/.uze', 'STUDENT');
 
-INSERT INTO student(id, name, surname, `index`, year, semester, average_grade, major_id, account_id)
-VALUES (1, 'Sasa', 'Stanisic', 4377, 3, 6, 9.65, 1, 1);
+INSERT INTO student(id, name, surname, `index`, year, semester, average_grade, major_id, study_status_id, account_id)
+VALUES (1, 'Sasa', 'Stanisic', 4377, 3, 6, 9.65, 1, 1, 1);
