@@ -3,6 +3,7 @@ package com.smarty.domain.course.service;
 import com.smarty.domain.course.entity.Course;
 import com.smarty.domain.course.model.CourseRequestDTO;
 import com.smarty.domain.course.model.CourseResponseDTO;
+import com.smarty.domain.course.model.CourseUpdateDTO;
 import com.smarty.domain.course.repository.CourseRepository;
 import com.smarty.infrastructure.handler.exceptions.ConflictException;
 import com.smarty.infrastructure.handler.exceptions.NotFoundException;
@@ -16,9 +17,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
@@ -78,6 +81,56 @@ public class CourseServiceImplTest {
 
         when(courseRepository.existsByCode("IT355")).thenReturn(true);
         Assertions.assertThrows(ConflictException.class, () -> courseService.createCourse(courseDTO));
+    }
+
+    @Test
+    void testGetAllCourses() {
+        Pageable pageable = mock(Pageable.class);
+        CourseResponseDTO courseResponseDTO = new CourseResponseDTO(1L, "IT355", "Web Systems 2", 8, 3, 6,
+                "Course about learning backend framework Spring and Spring Boot");
+        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
+
+        var expectedCourses = courses.map(course -> courseMapper.toCourseResponseDTO(course));
+        doReturn(courses).when(courseRepository).findAll(pageable);
+        var coursePage = courseService.getAllCourses(pageable);
+
+        Assertions.assertEquals(expectedCourses, coursePage);
+    }
+
+    @Test
+    void testGetCourseById() {
+        CourseResponseDTO courseResponseDTO = new CourseResponseDTO(1L, "IT355", "Web Systems 2", 8, 3, 6,
+                "Course about learning backend framework Spring and Spring Boot");
+        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
+
+        var expectedCourse = courseMapper.toCourseResponseDTO(course);
+        doReturn(Optional.of(course)).when(courseRepository).findById(1L);
+        var returnedCourse = courseService.getCourseById(1L);
+
+        Assertions.assertEquals(expectedCourse, returnedCourse);
+    }
+
+    @Test
+    void testGetCourseById_NotFound() {
+        doReturn(Optional.empty()).when(courseRepository).findById(1L);
+        Assertions.assertThrows(NotFoundException.class, () -> courseService.getCourseById(1L));
+    }
+
+    @Test
+    void testUpdateCourse() {
+        CourseUpdateDTO courseUpdateDTO = new CourseUpdateDTO("Web Systems 2", 10, 3, 6,
+                "Course about learning backend framework Spring and Spring Boot");
+        CourseResponseDTO courseResponseDTO = new CourseResponseDTO(1L, "IT355", "Web Systems 2", 10, 3, 6,
+                "Course about learning backend framework Spring and Spring Boot");
+
+        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
+        doCallRealMethod().when(courseMapper).updateCourseFromDTO(courseUpdateDTO, course);
+        when(courseRepository.save(course)).thenReturn(course);
+        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
+
+        var updatedCourseDTO = courseService.updateCourse(1L, courseUpdateDTO);
+
+        assertThat(courseResponseDTO).isEqualTo(updatedCourseDTO);
     }
 
     @Test
