@@ -76,11 +76,11 @@ public class CourseServiceImplTest {
 
     @Test
     void testCourseByCode_NotValid() {
-        CourseRequestDTO courseDTO = new CourseRequestDTO("IT355", "Web Systems 2", 8, 3, 6,
+        CourseRequestDTO courseRequestDTO = new CourseRequestDTO("IT355", "Web Systems 2", 8, 3, 6,
                 "Course about learning backend framework Spring and Spring Boot");
 
         when(courseRepository.existsByCode("IT355")).thenReturn(true);
-        Assertions.assertThrows(ConflictException.class, () -> courseService.createCourse(courseDTO));
+        Assertions.assertThrows(ConflictException.class, () -> courseService.createCourse(courseRequestDTO));
     }
 
     @Test
