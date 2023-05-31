@@ -1,5 +1,6 @@
 package com.smarty.domain.course.service;
 
+import com.smarty.domain.course.entity.Course;
 import com.smarty.domain.course.model.CourseRequestDTO;
 import com.smarty.domain.course.model.CourseResponseDTO;
 import com.smarty.domain.course.model.CourseUpdateDTO;
@@ -13,6 +14,8 @@ public interface CourseService {
     Page<CourseResponseDTO> getAllCourses(Pageable pageable);
 
     CourseResponseDTO getCourseById(Long id);
+
+    Course getById(Long id);
 
     CourseResponseDTO updateCourse(Long id, CourseUpdateDTO courseDTO);
 

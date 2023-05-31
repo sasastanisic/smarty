@@ -53,7 +53,7 @@ public class ProfessorServiceImpl implements ProfessorService {
         return professorMapper.toProfessorResponseDTO(getById(id));
     }
 
-    private Professor getById(Long id) {
+    public Professor getById(Long id) {
         Optional<Professor> optionalProfessor = professorRepository.findById(id);
 
         if (optionalProfessor.isEmpty()) {

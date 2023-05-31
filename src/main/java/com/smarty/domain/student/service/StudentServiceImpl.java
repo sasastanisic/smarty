@@ -75,6 +75,16 @@ public class StudentServiceImpl implements StudentService {
         return studentMapper.toStudentResponseDTO(getById(id));
     }
 
+    private Student getById(Long id) {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+
+        if (optionalStudent.isEmpty()) {
+            throw new NotFoundException(STUDENT_NOT_EXISTS.formatted(id));
+        }
+
+        return optionalStudent.get();
+    }
+
     @Override
     public List<StudentResponseDTO> getStudentsByMajor(Long majorId) {
         List<Student> studentsByMajor = studentRepository.findStudentsByMajor_Id(majorId);
@@ -103,16 +113,6 @@ public class StudentServiceImpl implements StudentService {
                 .stream()
                 .map(studentMapper::toStudentResponseDTO)
                 .collect(Collectors.toList());
-    }
-
-    private Student getById(Long id) {
-        Optional<Student> optionalStudent = studentRepository.findById(id);
-
-        if (optionalStudent.isEmpty()) {
-            throw new NotFoundException(STUDENT_NOT_EXISTS.formatted(id));
-        }
-
-        return optionalStudent.get();
     }
 
     @Override

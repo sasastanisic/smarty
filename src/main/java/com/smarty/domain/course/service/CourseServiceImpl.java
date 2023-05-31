@@ -55,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
         return courseMapper.toCourseResponseDTO(getById(id));
     }
 
-    private Course getById(Long id) {
+    public Course getById(Long id) {
         Optional<Course> optionalCourse = courseRepository.findById(id);
 
         if (optionalCourse.isEmpty()) {
