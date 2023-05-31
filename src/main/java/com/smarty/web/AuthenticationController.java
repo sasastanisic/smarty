@@ -3,6 +3,7 @@ package com.smarty.web;
 import com.smarty.domain.account.model.LoginRequestDTO;
 import com.smarty.domain.account.model.LoginResponseDTO;
 import com.smarty.infrastructure.security.AuthenticationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginDTO) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginDTO) {
         return ResponseEntity.ok(authenticationService.authenticate(loginDTO));
     }
 
