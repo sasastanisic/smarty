@@ -5,15 +5,19 @@ import com.smarty.domain.course.model.CourseRequestDTO;
 import com.smarty.domain.course.model.CourseResponseDTO;
 import com.smarty.domain.course.model.CourseUpdateDTO;
 import com.smarty.domain.course.repository.CourseRepository;
+import com.smarty.domain.professor.service.ProfessorService;
 import com.smarty.infrastructure.handler.exceptions.ConflictException;
 import com.smarty.infrastructure.handler.exceptions.NotFoundException;
 import com.smarty.infrastructure.mapper.CourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -22,11 +26,15 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final ProfessorService professorService;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, CourseMapper courseMapper) {
+    public CourseServiceImpl(CourseRepository courseRepository,
+                             CourseMapper courseMapper,
+                             @Lazy ProfessorService professorService) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
+        this.professorService = professorService;
     }
 
     @Override
@@ -63,6 +71,28 @@ public class CourseServiceImpl implements CourseService {
         }
 
         return optionalCourse.get();
+    }
+
+    @Override
+    public void existsById(Long id) {
+        if (!courseRepository.existsById(id)) {
+            throw new NotFoundException(COURSE_NOT_EXISTS.formatted(id));
+        }
+    }
+
+    @Override
+    public List<CourseResponseDTO> getCoursesByProfessor(Long professorId) {
+        List<Course> coursesByProfessor = courseRepository.findCoursesByProfessor(professorId);
+        professorService.existsById(professorId);
+
+        if (coursesByProfessor.isEmpty()) {
+            throw new NotFoundException("List of courses by professor is empty");
+        }
+
+        return coursesByProfessor
+                .stream()
+                .map(courseMapper::toCourseResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

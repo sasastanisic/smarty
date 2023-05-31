@@ -7,6 +7,8 @@ import com.smarty.domain.course.model.CourseUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CourseService {
 
     CourseResponseDTO createCourse(CourseRequestDTO courseDTO);
@@ -16,6 +18,10 @@ public interface CourseService {
     CourseResponseDTO getCourseById(Long id);
 
     Course getById(Long id);
+
+    void existsById(Long id);
+
+    List<CourseResponseDTO> getCoursesByProfessor(Long professorId);
 
     CourseResponseDTO updateCourse(Long id, CourseUpdateDTO courseDTO);
 
