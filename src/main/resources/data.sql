@@ -21,8 +21,8 @@ VALUES (1, 'sasastanisic4@gmail.com', '$2a$12$IV50fkN2dG7PzTnkcvyj2urBuYzSQZ6rXi
        (3, 'tamaravukadinovic@metropolitan.ac.rs', '$2a$12$lnHL2rNkmVXXVutHrfyWJO0QwI9jHPw0e6zKqkPPPr4axvMa0kWqa',
         'ASSISTANT');
 
-INSERT INTO student(id, name, surname, `index`, year, semester, average_grade, major_id, study_status_id, account_id)
-VALUES (1, 'Sasa', 'Stanisic', 4377, 3, 6, 9.65, 1, 1, 1);
+INSERT INTO student(id, name, surname, `index`, year, semester, major_id, study_status_id, account_id)
+VALUES (1, 'Sasa', 'Stanisic', 4377, 3, 6, 1, 1, 1);
 
 INSERT INTO professor(id, name, surname, years_of_experience, account_id)
 VALUES (1, 'Jovana', 'Jovic', 7, 2),
