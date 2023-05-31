@@ -1,5 +1,6 @@
 package com.smarty.domain.account.entity;
 
+import com.smarty.domain.account.enums.Role;
 import jakarta.persistence.*;
 
 @Entity(name = "account")
@@ -15,8 +16,9 @@ public class Account {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     public Account() {
     }
@@ -45,11 +47,11 @@ public class Account {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

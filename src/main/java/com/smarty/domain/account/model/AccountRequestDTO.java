@@ -1,7 +1,9 @@
 package com.smarty.domain.account.model;
 
+import com.smarty.domain.account.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record AccountRequestDTO(
 
@@ -12,8 +14,8 @@ public record AccountRequestDTO(
         @NotBlank(message = "Password can't be blank")
         String password,
 
-        @NotBlank(message = "Role can't be blank")
-        String role
+        @NotNull(message = "Role can't be null")
+        Role role
 
 ) {
 
