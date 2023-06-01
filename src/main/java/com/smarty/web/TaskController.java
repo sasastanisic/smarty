@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/tasks")
 @PreAuthorize("hasRole('PROFESSOR')")
@@ -38,6 +40,11 @@ public class TaskController {
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.getTaskById(id));
+    }
+
+    @GetMapping("/by-course/{courseId}")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksByCourse(@PathVariable Long courseId) {
+        return ResponseEntity.ok(taskService.getTasksByCourse(courseId));
     }
 
     @PutMapping("/{id}")
