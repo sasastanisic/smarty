@@ -17,7 +17,7 @@ public class Activity {
     @Column(nullable = false)
     private double points;
 
-    @Column(nullable = false)
+    @Column
     private String comment;
 
     @ManyToOne
