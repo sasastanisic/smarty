@@ -6,6 +6,7 @@ import com.smarty.domain.activity.model.ActivityResponseDTO;
 import com.smarty.domain.activity.model.ActivityUpdateDTO;
 import com.smarty.domain.activity.repository.ActivityRepository;
 import com.smarty.domain.course.service.CourseService;
+import com.smarty.domain.exam.service.ExamService;
 import com.smarty.domain.student.service.StudentService;
 import com.smarty.domain.task.enums.Type;
 import com.smarty.domain.task.service.TaskService;
@@ -14,6 +15,7 @@ import com.smarty.infrastructure.handler.exceptions.ForbiddenException;
 import com.smarty.infrastructure.handler.exceptions.NotFoundException;
 import com.smarty.infrastructure.mapper.ActivityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,18 +33,21 @@ public class ActivityServiceImpl implements ActivityService {
     private final TaskService taskService;
     private final StudentService studentService;
     private final CourseService courseService;
+    private final ExamService examService;
 
     @Autowired
     public ActivityServiceImpl(ActivityRepository activityRepository,
                                ActivityMapper activityMapper,
                                TaskService taskService,
                                StudentService studentService,
-                               CourseService courseService) {
+                               CourseService courseService,
+                               @Lazy ExamService examService) {
         this.activityRepository = activityRepository;
         this.activityMapper = activityMapper;
         this.taskService = taskService;
         this.studentService = studentService;
         this.courseService = courseService;
+        this.examService = examService;
     }
 
     @Override
@@ -51,6 +56,9 @@ public class ActivityServiceImpl implements ActivityService {
         var task = taskService.getById(activityDTO.taskId());
         var student = studentService.getById(activityDTO.studentId());
         var course = courseService.getById(task.getCourse().getId());
+
+        examService.checkCourseAndStudentYear(student, course);
+        examService.isExamAlreadyPassed(student, course);
 
         activity.setTask(task);
         activity.setStudent(student);
@@ -112,6 +120,11 @@ public class ActivityServiceImpl implements ActivityService {
                 .stream()
                 .map(activityMapper::toActivityResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Double getTotalActivityPointsByCourse(Long studentId, Long courseId) {
+        return activityRepository.findTotalActivityPointsByCourse(studentId, courseId);
     }
 
     @Override

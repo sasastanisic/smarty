@@ -18,6 +18,8 @@ public interface ActivityService {
 
     List<ActivityResponseDTO> getStudentActivitiesByCourse(Long studentId, String code);
 
+    Double getTotalActivityPointsByCourse(Long studentId, Long courseId);
+
     ActivityResponseDTO updateActivity(Long id, ActivityUpdateDTO activityDTO);
 
     void deleteActivity(Long id);
