@@ -81,6 +81,13 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public void existsByCode(String code) {
+        if (!courseRepository.existsByCode(code)) {
+            throw new NotFoundException("Course with code %s doesn't exist".formatted(code));
+        }
+    }
+
+    @Override
     public List<CourseResponseDTO> getCoursesByProfessor(Long professorId) {
         List<Course> coursesByProfessor = courseRepository.findCoursesByProfessor(professorId);
         professorService.existsById(professorId);

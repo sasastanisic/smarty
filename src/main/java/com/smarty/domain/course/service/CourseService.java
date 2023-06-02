@@ -21,6 +21,8 @@ public interface CourseService {
 
     void existsById(Long id);
 
+    void existsByCode(String code);
+
     List<CourseResponseDTO> getCoursesByProfessor(Long professorId);
 
     CourseResponseDTO updateCourse(Long id, CourseUpdateDTO courseDTO);

@@ -75,7 +75,7 @@ public class StudentServiceImpl implements StudentService {
         return studentMapper.toStudentResponseDTO(getById(id));
     }
 
-    private Student getById(Long id) {
+    public Student getById(Long id) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
 
         if (optionalStudent.isEmpty()) {
@@ -83,6 +83,13 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return optionalStudent.get();
+    }
+
+    @Override
+    public void existsById(Long id) {
+        if (!studentRepository.existsById(id)) {
+            throw new NotFoundException(STUDENT_NOT_EXISTS.formatted(id));
+        }
     }
 
     @Override
@@ -94,10 +101,7 @@ public class StudentServiceImpl implements StudentService {
             throw new NotFoundException("List of students by major is empty");
         }
 
-        return studentsByMajor
-                .stream()
-                .map(studentMapper::toStudentResponseDTO)
-                .collect(Collectors.toList());
+        return getStudentListResponseDTO(studentsByMajor);
     }
 
     @Override
@@ -109,7 +113,11 @@ public class StudentServiceImpl implements StudentService {
             throw new NotFoundException("List of students by study status is empty");
         }
 
-        return studentsByStudyStatus
+        return getStudentListResponseDTO(studentsByStudyStatus);
+    }
+
+    private List<StudentResponseDTO> getStudentListResponseDTO(List<Student> studentList) {
+        return studentList
                 .stream()
                 .map(studentMapper::toStudentResponseDTO)
                 .collect(Collectors.toList());
