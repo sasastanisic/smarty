@@ -37,6 +37,7 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAllStudents(pageable));
     }
 
+    @PreAuthorize("hasRole('PROFESSOR')")
     @GetMapping("/{id}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
