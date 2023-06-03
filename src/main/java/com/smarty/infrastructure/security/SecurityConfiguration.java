@@ -33,7 +33,6 @@ public class SecurityConfiguration {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity httpSecurity, JwtFilter jwtFilter) throws Exception {
         return httpSecurity
-                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers(AUTH_ENDPOINT).permitAll().anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -47,10 +46,11 @@ public class SecurityConfiguration {
 
         configuration.setAllowedOrigins(ImmutableList.of("*"));
         configuration.setAllowedMethods(ImmutableList.of(
-                HttpMethod.GET.name(),
-                HttpMethod.DELETE.name(),
-                HttpMethod.PUT.name(),
                 HttpMethod.POST.name(),
+                HttpMethod.GET.name(),
+                HttpMethod.PUT.name(),
+                HttpMethod.PATCH.name(),
+                HttpMethod.DELETE.name(),
                 HttpMethod.OPTIONS.name()));
         configuration.setAllowedHeaders(ImmutableList.of(
                 HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
