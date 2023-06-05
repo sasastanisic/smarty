@@ -20,6 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ExamServiceImpl implements ExamService {
 
@@ -140,6 +143,38 @@ public class ExamServiceImpl implements ExamService {
 
     private Exam getById(Long id) {
         return examRepository.findById(id).orElseThrow(() -> new NotFoundException(EXAM_NOT_EXISTS.formatted(id)));
+    }
+
+    @Override
+    public List<ExamResponseDTO> getExamHistoryByStudent(Long studentId) {
+        List<Exam> examHistoryByStudent = examRepository.findExamHistoryByStudent(studentId);
+        studentService.existsById(studentId);
+
+        if (examHistoryByStudent.isEmpty()) {
+            throw new NotFoundException("Exam history by student is empty");
+        }
+
+        return getExamListResponseDTO(examHistoryByStudent);
+    }
+
+    @Override
+    public List<ExamResponseDTO> getPassedExamsByStudent(Long studentId, int year) {
+        List<Exam> passedExamsByStudent = examRepository.findPassedExamsByStudent(studentId, year);
+        studentService.existsById(studentId);
+        courseService.existsByYear(year);
+
+        if (passedExamsByStudent.isEmpty()) {
+            throw new NotFoundException("List of passed exams is empty");
+        }
+
+        return getExamListResponseDTO(passedExamsByStudent);
+    }
+
+    private List<ExamResponseDTO> getExamListResponseDTO(List<Exam> examList) {
+        return examList
+                .stream()
+                .map(examMapper::toExamResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

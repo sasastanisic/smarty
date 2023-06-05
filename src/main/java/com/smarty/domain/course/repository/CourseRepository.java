@@ -12,6 +12,14 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     boolean existsByCode(String code);
 
+    boolean existsByYear(int year);
+
+    boolean existsBySemester(int semester);
+
+    List<Course> findByYear(int year);
+
+    List<Course> findBySemester(int semester);
+
     @Query("SELECT c FROM course c " +
             "JOIN engagement e ON c.id = e.course.id " +
             "JOIN professor p ON e.professor.id = p.id " +

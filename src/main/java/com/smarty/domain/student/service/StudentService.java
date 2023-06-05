@@ -25,6 +25,8 @@ public interface StudentService {
 
     List<StudentResponseDTO> getStudentsByStudyStatus(Long statusId);
 
+    List<StudentResponseDTO> getStudentsWhoPassedCertainCourse(Long courseId);
+
     StudentResponseDTO updateStudent(Long id, StudentUpdateDTO studentDTO);
 
     void deleteStudent(Long id);

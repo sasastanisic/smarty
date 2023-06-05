@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @PreAuthorize("hasRole('PROFESSOR')")
 @RequestMapping("/api/exams")
@@ -38,6 +40,16 @@ public class ExamController {
     @GetMapping("/{id}")
     public ResponseEntity<ExamResponseDTO> getExamById(@PathVariable Long id) {
         return ResponseEntity.ok(examService.getExamById(id));
+    }
+
+    @GetMapping("/by-student/{studentId}")
+    public ResponseEntity<List<ExamResponseDTO>> getExamHistoryByStudent(@PathVariable Long studentId) {
+        return ResponseEntity.ok(examService.getExamHistoryByStudent(studentId));
+    }
+
+    @GetMapping("/by-student-passed/{studentId}")
+    public ResponseEntity<List<ExamResponseDTO>> getPassedExamsByStudent(@PathVariable Long studentId, @RequestParam int year) {
+        return ResponseEntity.ok(examService.getPassedExamsByStudent(studentId, year));
     }
 
     @PutMapping("/{id}")

@@ -88,6 +88,49 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public void existsByYear(int year) {
+        int minYear = 1;
+        int maxYear = 4;
+
+        if (!courseRepository.existsByYear(year) && (year < minYear || year > maxYear)) {
+            throw new NotFoundException("Year %d doesn't exist during the studies".formatted(year));
+        }
+    }
+
+    private void existsBySemester(int semester) {
+        int minSemester = 1;
+        int maxSemester = 8;
+
+        if (!courseRepository.existsBySemester(semester) && (semester < minSemester || semester > maxSemester)) {
+            throw new NotFoundException("Semester %d doesn't exist during the studies".formatted(semester));
+        }
+    }
+
+    @Override
+    public List<CourseResponseDTO> getCoursesByYear(int year) {
+        List<Course> coursesByYear = courseRepository.findByYear(year);
+        existsByYear(year);
+
+        if (coursesByYear.isEmpty()) {
+            throw new NotFoundException("List of courses by year is empty");
+        }
+
+        return getCourseListResponseDTO(coursesByYear);
+    }
+
+    @Override
+    public List<CourseResponseDTO> getCoursesBySemester(int semester) {
+        List<Course> coursesBySemester = courseRepository.findBySemester(semester);
+        existsBySemester(semester);
+
+        if (coursesBySemester.isEmpty()) {
+            throw new NotFoundException("List of courses by semester is empty");
+        }
+
+        return getCourseListResponseDTO(coursesBySemester);
+    }
+
+    @Override
     public List<CourseResponseDTO> getCoursesByProfessor(Long professorId) {
         List<Course> coursesByProfessor = courseRepository.findCoursesByProfessor(professorId);
         professorService.existsById(professorId);
@@ -96,7 +139,11 @@ public class CourseServiceImpl implements CourseService {
             throw new NotFoundException("List of courses by professor is empty");
         }
 
-        return coursesByProfessor
+        return getCourseListResponseDTO(coursesByProfessor);
+    }
+
+    private List<CourseResponseDTO> getCourseListResponseDTO(List<Course> courseList) {
+        return courseList
                 .stream()
                 .map(courseMapper::toCourseResponseDTO)
                 .collect(Collectors.toList());

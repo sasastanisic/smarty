@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ExamRepository extends JpaRepository<Exam, Long> {
 
@@ -15,5 +17,13 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
             "JOIN course c ON e.course.id = c.id " +
             "WHERE s = :student AND c = :course AND e.grade > 5")
     boolean isExamAlreadyPassed(Student student, Course course);
+
+    @Query("SELECT e FROM exam e " +
+            "WHERE e.student.id = :studentId")
+    List<Exam> findExamHistoryByStudent(Long studentId);
+
+    @Query("SELECT e FROM exam e " +
+            "WHERE e.student.id = :studentId AND e.course.year = :year AND e.grade > 5")
+    List<Exam> findPassedExamsByStudent(Long studentId, int year);
 
 }

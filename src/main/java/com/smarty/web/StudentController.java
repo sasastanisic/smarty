@@ -56,6 +56,12 @@ public class StudentController {
     }
 
     @PreAuthorize("hasRole('PROFESSOR')")
+    @GetMapping("/by-course-passed/{courseId}")
+    public ResponseEntity<List<StudentResponseDTO>> getStudentsWhoPassedCertainCourse(@PathVariable Long courseId) {
+        return ResponseEntity.ok(studentService.getStudentsWhoPassedCertainCourse(courseId));
+    }
+
+    @PreAuthorize("hasRole('PROFESSOR')")
     @PutMapping("/{id}")
     public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateDTO studentDTO) {
         return ResponseEntity.ok(studentService.updateStudent(id, studentDTO));

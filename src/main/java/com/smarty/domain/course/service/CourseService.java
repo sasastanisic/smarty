@@ -23,6 +23,12 @@ public interface CourseService {
 
     void existsByCode(String code);
 
+    void existsByYear(int year);
+
+    List<CourseResponseDTO> getCoursesByYear(int year);
+
+    List<CourseResponseDTO> getCoursesBySemester(int semester);
+
     List<CourseResponseDTO> getCoursesByProfessor(Long professorId);
 
     CourseResponseDTO updateCourse(Long id, CourseUpdateDTO courseDTO);

@@ -1,6 +1,7 @@
 package com.smarty.domain.student.service;
 
 import com.smarty.domain.account.service.AccountService;
+import com.smarty.domain.course.service.CourseService;
 import com.smarty.domain.major.service.MajorService;
 import com.smarty.domain.status.service.StatusService;
 import com.smarty.domain.student.entity.Student;
@@ -30,18 +31,21 @@ public class StudentServiceImpl implements StudentService {
     private final MajorService majorService;
     private final StatusService statusService;
     private final AccountService accountService;
+    private final CourseService courseService;
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository,
                               StudentMapper studentMapper,
                               MajorService majorService,
                               StatusService statusService,
-                              AccountService accountService) {
+                              AccountService accountService,
+                              CourseService courseService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.majorService = majorService;
         this.statusService = statusService;
         this.accountService = accountService;
+        this.courseService = courseService;
     }
 
     @Override
@@ -114,6 +118,18 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return getStudentListResponseDTO(studentsByStudyStatus);
+    }
+
+    @Override
+    public List<StudentResponseDTO> getStudentsWhoPassedCertainCourse(Long courseId) {
+        List<Student> studentsWhoPassedCertainCourse = studentRepository.findStudentsWhoPassedCertainCourse(courseId);
+        courseService.existsById(courseId);
+
+        if (studentsWhoPassedCertainCourse.isEmpty()) {
+            throw new NotFoundException("There are 0 students that passed course with id %d".formatted(courseId));
+        }
+
+        return getStudentListResponseDTO(studentsWhoPassedCertainCourse);
     }
 
     private List<StudentResponseDTO> getStudentListResponseDTO(List<Student> studentList) {

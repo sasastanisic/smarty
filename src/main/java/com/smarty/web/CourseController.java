@@ -40,6 +40,16 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseById(id));
     }
 
+    @GetMapping("/by-year")
+    public ResponseEntity<List<CourseResponseDTO>> getCoursesByYear(@RequestParam int year) {
+        return ResponseEntity.ok(courseService.getCoursesByYear(year));
+    }
+
+    @GetMapping("/by-semester")
+    public ResponseEntity<List<CourseResponseDTO>> getCoursesBySemester(@RequestParam int semester) {
+        return ResponseEntity.ok(courseService.getCoursesBySemester(semester));
+    }
+
     @GetMapping("/by-professor/{professorId}")
     public ResponseEntity<List<CourseResponseDTO>> getCoursesByProfessor(@PathVariable Long professorId) {
         return ResponseEntity.ok(courseService.getCoursesByProfessor(professorId));
