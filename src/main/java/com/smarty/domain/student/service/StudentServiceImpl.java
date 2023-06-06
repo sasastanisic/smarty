@@ -5,6 +5,7 @@ import com.smarty.domain.course.service.CourseService;
 import com.smarty.domain.major.service.MajorService;
 import com.smarty.domain.status.service.StatusService;
 import com.smarty.domain.student.entity.Student;
+import com.smarty.domain.student.model.PasswordDTO;
 import com.smarty.domain.student.model.StudentRequestDTO;
 import com.smarty.domain.student.model.StudentResponseDTO;
 import com.smarty.domain.student.model.StudentUpdateDTO;
@@ -15,6 +16,7 @@ import com.smarty.infrastructure.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +34,7 @@ public class StudentServiceImpl implements StudentService {
     private final StatusService statusService;
     private final AccountService accountService;
     private final CourseService courseService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository,
@@ -55,8 +58,11 @@ public class StudentServiceImpl implements StudentService {
         var status = statusService.getStatusById(studentDTO.statusId());
         accountService.existsByEmail(studentDTO.account().email());
 
+        var encryptedPassword = passwordEncoder.encode(studentDTO.account().password());
+
         student.setMajor(major);
         student.setStatus(status);
+        student.getAccount().setPassword(encryptedPassword);
         validateIndex(studentDTO.index());
         studentRepository.save(student);
 
@@ -146,11 +152,33 @@ public class StudentServiceImpl implements StudentService {
         var status = statusService.getStatusById(studentDTO.statusId());
         studentMapper.updateStudentFromDTO(studentDTO, student);
 
+        var encryptedPassword = passwordEncoder.encode(studentDTO.account().password());
+
         student.setMajor(major);
         student.setStatus(status);
+        student.getAccount().setPassword(encryptedPassword);
         studentRepository.save(student);
 
         return studentMapper.toStudentResponseDTO(student);
+    }
+
+    @Override
+    public StudentResponseDTO updatePassword(Long id, PasswordDTO passwordDTO) {
+        Student student = getById(id);
+
+        arePasswordsMatching(passwordDTO.password(), passwordDTO.confirmedPassword());
+        var encryptedPassword = passwordEncoder.encode(passwordDTO.password());
+
+        student.getAccount().setPassword(encryptedPassword);
+        studentRepository.save(student);
+
+        return studentMapper.toStudentResponseDTO(student);
+    }
+
+    private void arePasswordsMatching(String password, String confirmedPassword) {
+        if (!password.matches(confirmedPassword)) {
+            throw new NotFoundException("Passwords aren't matching");
+        }
     }
 
     @Override
@@ -160,6 +188,11 @@ public class StudentServiceImpl implements StudentService {
         }
 
         studentRepository.deleteById(id);
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
 }

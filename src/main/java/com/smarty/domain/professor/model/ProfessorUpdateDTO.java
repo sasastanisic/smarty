@@ -1,5 +1,7 @@
 package com.smarty.domain.professor.model;
 
+import com.smarty.domain.account.model.AccountUpdateDTO;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
@@ -12,7 +14,10 @@ public record ProfessorUpdateDTO(
         String surname,
 
         @Min(value = 0, message = "Years of experience can't be negative")
-        int yearsOfExperience
+        int yearsOfExperience,
+
+        @Valid
+        AccountUpdateDTO account
 
 ) {
 

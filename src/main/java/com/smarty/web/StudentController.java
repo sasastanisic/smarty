@@ -1,5 +1,6 @@
 package com.smarty.web;
 
+import com.smarty.domain.student.model.PasswordDTO;
 import com.smarty.domain.student.model.StudentRequestDTO;
 import com.smarty.domain.student.model.StudentResponseDTO;
 import com.smarty.domain.student.model.StudentUpdateDTO;
@@ -65,6 +66,12 @@ public class StudentController {
     @PutMapping("/{id}")
     public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateDTO studentDTO) {
         return ResponseEntity.ok(studentService.updateStudent(id, studentDTO));
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @PatchMapping("/{id}")
+    public ResponseEntity<StudentResponseDTO> updatePassword(@PathVariable Long id, @Valid @RequestBody PasswordDTO passwordDTO) {
+        return ResponseEntity.ok(studentService.updatePassword(id, passwordDTO));
     }
 
     @PreAuthorize("hasRole('PROFESSOR')")

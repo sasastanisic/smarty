@@ -1,5 +1,7 @@
 package com.smarty.domain.student.model;
 
+import com.smarty.domain.account.model.AccountUpdateDTO;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +27,10 @@ public record StudentUpdateDTO(
         Long majorId,
 
         @NotNull(message = "Study status can't be null")
-        Long statusId
+        Long statusId,
+
+        @Valid
+        AccountUpdateDTO account
 
 ) {
 

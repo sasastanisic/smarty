@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class ProfessorServiceImpl implements ProfessorService {
     private final ProfessorMapper professorMapper;
     private final AccountService accountService;
     private final CourseService courseService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public ProfessorServiceImpl(ProfessorRepository professorRepository,
@@ -45,6 +47,9 @@ public class ProfessorServiceImpl implements ProfessorService {
         Professor professor = professorMapper.toProfessor(professorDTO);
         accountService.existsByEmail(professorDTO.account().email());
 
+        var encryptedPassword = passwordEncoder.encode(professorDTO.account().password());
+
+        professor.getAccount().setPassword(encryptedPassword);
         professorRepository.save(professor);
 
         return professorMapper.toProfessorResponseDTO(professor);
@@ -97,6 +102,9 @@ public class ProfessorServiceImpl implements ProfessorService {
         Professor professor = getById(id);
         professorMapper.updateProfessorFromDTO(professorDTO, professor);
 
+        var encryptedPassword = passwordEncoder.encode(professorDTO.account().password());
+
+        professor.getAccount().setPassword(encryptedPassword);
         professorRepository.save(professor);
 
         return professorMapper.toProfessorResponseDTO(professor);
@@ -109,6 +117,11 @@ public class ProfessorServiceImpl implements ProfessorService {
         }
 
         professorRepository.deleteById(id);
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
 }
