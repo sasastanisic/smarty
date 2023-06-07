@@ -13,6 +13,7 @@ import com.smarty.domain.student.repository.StudentRepository;
 import com.smarty.infrastructure.handler.exceptions.ConflictException;
 import com.smarty.infrastructure.handler.exceptions.NotFoundException;
 import com.smarty.infrastructure.mapper.StudentMapper;
+import com.smarty.infrastructure.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,7 @@ public class StudentServiceImpl implements StudentService {
     private final StatusService statusService;
     private final AccountService accountService;
     private final CourseService courseService;
+    private final AuthenticationService authenticationService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -42,13 +44,15 @@ public class StudentServiceImpl implements StudentService {
                               MajorService majorService,
                               StatusService statusService,
                               AccountService accountService,
-                              CourseService courseService) {
+                              CourseService courseService,
+                              AuthenticationService authenticationService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.majorService = majorService;
         this.statusService = statusService;
         this.accountService = accountService;
         this.courseService = courseService;
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -58,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
         var status = statusService.getStatusById(studentDTO.statusId());
         accountService.existsByEmail(studentDTO.account().email());
 
-        var encryptedPassword = passwordEncoder.encode(studentDTO.account().password());
+        var encryptedPassword = encodePassword(studentDTO.account().password());
 
         student.setMajor(major);
         student.setStatus(status);
@@ -67,6 +71,10 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.save(student);
 
         return studentMapper.toStudentResponseDTO(student);
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     private void validateIndex(int index) {
@@ -152,7 +160,7 @@ public class StudentServiceImpl implements StudentService {
         var status = statusService.getStatusById(studentDTO.statusId());
         studentMapper.updateStudentFromDTO(studentDTO, student);
 
-        var encryptedPassword = passwordEncoder.encode(studentDTO.account().password());
+        var encryptedPassword = encodePassword(studentDTO.account().password());
 
         student.setMajor(major);
         student.setStatus(status);
@@ -166,8 +174,9 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponseDTO updatePassword(Long id, PasswordDTO passwordDTO) {
         Student student = getById(id);
 
+        authenticationService.canUpdatePassword(student.getAccount().getEmail());
         arePasswordsMatching(passwordDTO.password(), passwordDTO.confirmedPassword());
-        var encryptedPassword = passwordEncoder.encode(passwordDTO.password());
+        var encryptedPassword = encodePassword(passwordDTO.password());
 
         student.getAccount().setPassword(encryptedPassword);
         studentRepository.save(student);

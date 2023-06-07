@@ -1,5 +1,6 @@
 package com.smarty.web;
 
+import com.smarty.domain.professor.model.PasswordDTO;
 import com.smarty.domain.professor.model.ProfessorRequestDTO;
 import com.smarty.domain.professor.model.ProfessorResponseDTO;
 import com.smarty.domain.professor.model.ProfessorUpdateDTO;
@@ -17,7 +18,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/professors")
-@PreAuthorize("hasRole('PROFESSOR')")
 public class ProfessorController {
 
     private final ProfessorService professorService;
@@ -50,6 +50,12 @@ public class ProfessorController {
     @PutMapping("/{id}")
     public ResponseEntity<ProfessorResponseDTO> updateProfessor(@PathVariable Long id, @Valid @RequestBody ProfessorUpdateDTO professorDTO) {
         return ResponseEntity.ok(professorService.updateProfessor(id, professorDTO));
+    }
+
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProfessorResponseDTO> updatePassword(@PathVariable Long id, @Valid @RequestBody PasswordDTO passwordDTO) {
+        return ResponseEntity.ok(professorService.updatePassword(id, passwordDTO));
     }
 
     @DeleteMapping("/{id}")
