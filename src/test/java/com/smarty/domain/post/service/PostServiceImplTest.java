@@ -73,8 +73,8 @@ public class PostServiceImplTest {
     void testGetAllPosts() {
         Pageable pageable = mock(Pageable.class);
         PostResponseDTO postResponseDTO = new PostResponseDTO(1L, "Test post", "This post is used for testing purposes", LocalDateTime.now());
-        when(postMapper.toPostResponseDTO(post)).thenReturn(postResponseDTO);
 
+        when(postMapper.toPostResponseDTO(post)).thenReturn(postResponseDTO);
         var expectedPosts = posts.map(post -> postMapper.toPostResponseDTO(post));
         doReturn(posts).when(postRepository).findAll(pageable);
         var postPage = postService.getAllPosts(pageable);
@@ -103,15 +103,17 @@ public class PostServiceImplTest {
     @Test
     void testGetLatestPosts() {
         List<Post> latestPosts = List.of(post);
+        PostResponseDTO postResponseDTO = new PostResponseDTO(1L, "Test post", "This post is used for testing purposes", LocalDateTime.now());
 
+        when(postMapper.toPostResponseDTO(post)).thenReturn(postResponseDTO);
         var expectedList = latestPosts
                 .stream()
                 .map(postMapper::toPostResponseDTO)
                 .toList();
-
-        doReturn(expectedList).when(postRepository).findByOrderByCreatedAtDesc();
+        doReturn(latestPosts).when(postRepository).findByOrderByCreatedAtDesc();
         var returnedList = postService.getLatestPosts();
 
+        Assertions.assertTrue(latestPosts.contains(post));
         Assertions.assertEquals(expectedList, returnedList);
     }
 

@@ -63,7 +63,7 @@ public class MajorServiceImplTest {
 
         when(majorMapper.toMajor(majorRequestDTO)).thenReturn(major);
         when(majorRepository.save(major)).thenReturn(major);
-        when(majorMapper.toMajorResponseDTO(major)).thenReturn(majorResponseDTO);
+        doReturn(majorResponseDTO).when(majorMapper).toMajorResponseDTO(major);
 
         var createdMajorDTO = majorService.createMajor(majorRequestDTO);
 
@@ -71,10 +71,22 @@ public class MajorServiceImplTest {
     }
 
     @Test
+    void testMajorByCode() {
+        MajorRequestDTO majorRequestDTO = new MajorRequestDTO("SE", "Software engineering", "Software engineering major", 4);
+
+        when(majorMapper.toMajor(majorRequestDTO)).thenReturn(major);
+        doReturn(false).when(majorRepository).existsByCode("SE");
+
+        Assertions.assertDoesNotThrow(() -> majorService.createMajor(majorRequestDTO));
+    }
+
+    @Test
     void testMajorByCode_NotValid() {
         MajorRequestDTO majorRequestDTO = new MajorRequestDTO("SE", "Software engineering", "Software engineering major", 4);
 
-        when(majorRepository.existsByCode("SE")).thenReturn(true);
+        when(majorMapper.toMajor(majorRequestDTO)).thenReturn(major);
+        doReturn(true).when(majorRepository).existsByCode("SE");
+
         Assertions.assertThrows(ConflictException.class, () -> majorService.createMajor(majorRequestDTO));
     }
 
@@ -82,8 +94,8 @@ public class MajorServiceImplTest {
     void testGetAllMajors() {
         Pageable pageable = mock(Pageable.class);
         MajorResponseDTO majorResponseDTO = new MajorResponseDTO(1L, "SE", "Software engineering", "Software engineering major", 4);
-        when(majorMapper.toMajorResponseDTO(major)).thenReturn(majorResponseDTO);
 
+        when(majorMapper.toMajorResponseDTO(major)).thenReturn(majorResponseDTO);
         var expectedMajors = majors.map(major -> majorMapper.toMajorResponseDTO(major));
         doReturn(majors).when(majorRepository).findAll(pageable);
         var majorPage = majorService.getAllMajors(pageable);
@@ -94,8 +106,8 @@ public class MajorServiceImplTest {
     @Test
     void testGetMajorById() {
         MajorResponseDTO majorResponseDTO = new MajorResponseDTO(1L, "SE", "Software engineering", "Software engineering major", 4);
-        when(majorMapper.toMajorResponseDTO(major)).thenReturn(majorResponseDTO);
 
+        when(majorMapper.toMajorResponseDTO(major)).thenReturn(majorResponseDTO);
         var expectedMajor = majorMapper.toMajorResponseDTO(major);
         doReturn(Optional.of(major)).when(majorRepository).findById(1L);
         var returnedMajor = majorService.getMajorById(1L);
@@ -130,7 +142,7 @@ public class MajorServiceImplTest {
         when(majorRepository.findById(1L)).thenReturn(Optional.of(major));
         doCallRealMethod().when(majorMapper).updateMajorFromDTO(majorUpdateDTO, major);
         when(majorRepository.save(major)).thenReturn(major);
-        when(majorMapper.toMajorResponseDTO(major)).thenReturn(majorResponseDTO);
+        doReturn(majorResponseDTO).when(majorMapper).toMajorResponseDTO(major);
 
         var updatedMajorDTO = majorService.updateMajor(1L, majorUpdateDTO);
 

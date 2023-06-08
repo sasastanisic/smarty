@@ -35,7 +35,7 @@ public class StatusServiceImplTest {
 
     @Test
     void testGetStatusById() {
-        when(statusRepository.findById(1L)).thenReturn(Optional.ofNullable(status));
+        doReturn(Optional.ofNullable(status)).when(statusRepository).findById(1L);
         Assertions.assertEquals(statusService.getStatusById(1L), status);
     }
 

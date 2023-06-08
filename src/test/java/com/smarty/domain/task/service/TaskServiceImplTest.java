@@ -100,6 +100,7 @@ public class TaskServiceImplTest {
 
         when(taskMapper.toTask(taskRequestDTO)).thenReturn(task);
         doReturn(false).when(taskRepository).existsByTypeAndCourse_Id(Type.HOMEWORK, taskRequestDTO.courseId());
+
         Assertions.assertDoesNotThrow(() -> taskService.createTask(taskRequestDTO));
     }
 
@@ -109,6 +110,7 @@ public class TaskServiceImplTest {
 
         when(taskMapper.toTask(taskRequestDTO)).thenReturn(task);
         doReturn(true).when(taskRepository).existsByTypeAndCourse_Id(Type.HOMEWORK, taskRequestDTO.courseId());
+
         Assertions.assertThrows(ConflictException.class, () -> taskService.createTask(taskRequestDTO));
     }
 
@@ -118,8 +120,8 @@ public class TaskServiceImplTest {
         CourseResponseDTO courseResponseDTO = new CourseResponseDTO(1L, "IT355", "Web Systems 2", 8, 3, 6,
                 "Course about learning backend framework Spring and Spring Boot");
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO(1L, Type.HOMEWORK, 1.5, 15, courseResponseDTO);
-        when(taskMapper.toTaskResponseDTO(task)).thenReturn(taskResponseDTO);
 
+        when(taskMapper.toTaskResponseDTO(task)).thenReturn(taskResponseDTO);
         var expectedTasks = tasks.map(task -> taskMapper.toTaskResponseDTO(task));
         doReturn(tasks).when(taskRepository).findAll(pageable);
         var taskPage = taskService.getAllTasks(pageable);
@@ -150,11 +152,20 @@ public class TaskServiceImplTest {
     @Test
     void testGetTasksByCourse() {
         List<Task> tasksByCourse = List.of(task);
+        CourseResponseDTO courseResponseDTO = new CourseResponseDTO(1L, "IT355", "Web Systems 2", 8, 3, 6,
+                "Course about learning backend framework Spring and Spring Boot");
+        TaskResponseDTO taskResponseDTO = new TaskResponseDTO(1L, Type.HOMEWORK, 1.5, 15, courseResponseDTO);
 
+        when(taskMapper.toTaskResponseDTO(task)).thenReturn(taskResponseDTO);
+        var expectedList = tasksByCourse
+                .stream()
+                .map(taskMapper::toTaskResponseDTO)
+                .toList();
         doReturn(tasksByCourse).when(taskRepository).findByCourse_Id(course.getId());
         var returnedList = taskService.getTasksByCourse(course.getId());
 
         Assertions.assertTrue(tasksByCourse.contains(task));
+        Assertions.assertEquals(expectedList, returnedList);
         Assertions.assertFalse(returnedList.isEmpty());
     }
 
