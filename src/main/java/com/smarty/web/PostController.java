@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('PROFESSOR')")
 @RequestMapping("/api/posts")
 public class PostController {
 
@@ -27,31 +26,37 @@ public class PostController {
         this.postService = postService;
     }
 
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")
     @PostMapping
     public ResponseEntity<PostResponseDTO> createPost(@Valid @RequestBody PostRequestDTO postDTO) {
         return ResponseEntity.ok(postService.createPost(postDTO));
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT')")
     @GetMapping
     public ResponseEntity<Page<PostResponseDTO>> getAllPosts(Pageable pageable) {
         return ResponseEntity.ok(postService.getAllPosts(pageable));
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT')")
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDTO> getPostById(@PathVariable Long id) {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT')")
     @GetMapping("/latest")
     public ResponseEntity<List<PostResponseDTO>> getLatestPosts() {
         return ResponseEntity.ok(postService.getLatestPosts());
     }
 
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")
     @PutMapping("/{id}")
     public ResponseEntity<PostResponseDTO> updatePost(@PathVariable Long id, @Valid @RequestBody PostUpdateDTO postDTO) {
         return ResponseEntity.ok(postService.updatePost(id, postDTO));
     }
 
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePost(@PathVariable Long id) {

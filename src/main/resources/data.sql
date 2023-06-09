@@ -44,7 +44,8 @@ VALUES (1, 'sasastanisic4377@metropolitan.ac.rs', '$2a$12$IV50fkN2dG7PzTnkcvyj2u
        (5, 'andjelagrujic4410@metropolitan.ac.rs', '$2a$12$qJzpfa25/Y7tJtB5sCtXpu6JhhaEw8.8rP/q6UPfcNhtukhYwAH1a',
         'STUDENT'),
        (6, 'davidantic4626@metropolitan.ac.rs', '$2a$12$sc5UbMJ5W5s7a4mbzxQKXeIHQWhfhzZsHBs4vUaSC9xBoU8690Q.K',
-        'STUDENT');
+        'STUDENT'),
+       (7, 'admin@metropolitan.ac.rs', '$2a$12$7iK8Kgq9Mr2XvLVxoUAISeagE7cz4/jvzpaEgO6MhQt0w7Ya9Hwfe', 'ADMIN');
 
 INSERT INTO student(id, name, surname, `index`, year, semester, major_id, study_status_id, account_id)
 VALUES (1, 'Sasa', 'Stanisic', 4377, 3, 6, 1, 1, 1),
@@ -54,7 +55,8 @@ VALUES (1, 'Sasa', 'Stanisic', 4377, 3, 6, 1, 1, 1),
 
 INSERT INTO professor(id, name, surname, years_of_experience, account_id)
 VALUES (1, 'Jovana', 'Jovic', 7, 2),
-       (2, 'Tamara', 'Vukadinovic', 3, 3);
+       (2, 'Tamara', 'Vukadinovic', 3, 3),
+       (3, 'Admin', 'Admin', 5, 7);
 
 INSERT INTO engagement(id, professor_id, course_id)
 VALUES (1, 2, 1),

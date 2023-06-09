@@ -27,42 +27,43 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @PreAuthorize("hasRole('PROFESSOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody StudentRequestDTO studentDTO) {
         return ResponseEntity.ok(studentService.createStudent(studentDTO));
     }
 
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT', 'ADMIN')")
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable) {
         return ResponseEntity.ok(studentService.getAllStudents(pageable));
     }
 
-    @PreAuthorize("hasRole('PROFESSOR')")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT', 'ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")
     @GetMapping("/by-major/{majorId}")
     public ResponseEntity<List<StudentResponseDTO>> getStudentsByMajor(@PathVariable Long majorId) {
         return ResponseEntity.ok(studentService.getStudentsByMajor(majorId));
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")
     @GetMapping("/by-status/{statusId}")
     public ResponseEntity<List<StudentResponseDTO>> getStudentsByStudyStatus(@PathVariable Long statusId) {
         return ResponseEntity.ok(studentService.getStudentsByStudyStatus(statusId));
     }
 
-    @PreAuthorize("hasRole('PROFESSOR')")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")
     @GetMapping("/by-course-passed/{courseId}")
     public ResponseEntity<List<StudentResponseDTO>> getStudentsWhoPassedCertainCourse(@PathVariable Long courseId) {
         return ResponseEntity.ok(studentService.getStudentsWhoPassedCertainCourse(courseId));
     }
 
-    @PreAuthorize("hasRole('PROFESSOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentUpdateDTO studentDTO) {
         return ResponseEntity.ok(studentService.updateStudent(id, studentDTO));
@@ -74,7 +75,7 @@ public class StudentController {
         return ResponseEntity.ok(studentService.updatePassword(id, passwordDTO));
     }
 
-    @PreAuthorize("hasRole('PROFESSOR')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(@PathVariable Long id) {

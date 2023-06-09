@@ -14,8 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/majors")
-@PreAuthorize("hasRole('STUDENT')")
 public class MajorController {
 
     private final MajorService majorService;

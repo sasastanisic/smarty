@@ -27,26 +27,31 @@ public class ProfessorController {
         this.professorService = professorService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProfessorResponseDTO> createProfessor(@Valid @RequestBody ProfessorRequestDTO professorDTO) {
         return ResponseEntity.ok(professorService.createProfessor(professorDTO));
     }
 
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT', 'ADMIN')")
     @GetMapping
     public ResponseEntity<Page<ProfessorResponseDTO>> getAllProfessors(Pageable pageable) {
         return ResponseEntity.ok(professorService.getAllProfessors(pageable));
     }
 
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT', 'ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<ProfessorResponseDTO> getProfessorById(@PathVariable Long id) {
         return ResponseEntity.ok(professorService.getProfessorById(id));
     }
 
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT', 'ADMIN')")
     @GetMapping("/by-course/{courseId}")
     public ResponseEntity<List<ProfessorResponseDTO>> getProfessorsByCourse(@PathVariable Long courseId) {
         return ResponseEntity.ok(professorService.getProfessorsByCourse(courseId));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProfessorResponseDTO> updateProfessor(@PathVariable Long id, @Valid @RequestBody ProfessorUpdateDTO professorDTO) {
         return ResponseEntity.ok(professorService.updateProfessor(id, professorDTO));
@@ -58,6 +63,7 @@ public class ProfessorController {
         return ResponseEntity.ok(professorService.updatePassword(id, passwordDTO));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProfessor(@PathVariable Long id) {
