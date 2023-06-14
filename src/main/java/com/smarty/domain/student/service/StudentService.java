@@ -20,6 +20,8 @@ public interface StudentService {
 
     Student getById(Long id);
 
+    StudentResponseDTO getStudentByEmail(String email);
+
     void existsById(Long id);
 
     List<StudentResponseDTO> getStudentsByMajor(Long majorId);

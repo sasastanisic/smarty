@@ -1,5 +1,6 @@
 package com.smarty.domain.student.service;
 
+import com.smarty.domain.account.entity.Account;
 import com.smarty.domain.account.service.AccountService;
 import com.smarty.domain.course.service.CourseService;
 import com.smarty.domain.major.service.MajorService;
@@ -101,6 +102,17 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return optionalStudent.get();
+    }
+
+    @Override
+    public StudentResponseDTO getStudentByEmail(String email) {
+        Student student = studentRepository.findByAccount_Email(email);
+
+        if (student == null) {
+            throw new NotFoundException("Student with email %s doesn't exist".formatted(email));
+        }
+
+        return studentMapper.toStudentResponseDTO(student);
     }
 
     @Override

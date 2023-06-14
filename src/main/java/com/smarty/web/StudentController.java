@@ -39,10 +39,16 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAllStudents(pageable));
     }
 
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT', 'ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
+    }
+
+    @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT', 'ADMIN')")
+    @GetMapping("/by-email")
+    public ResponseEntity<StudentResponseDTO> getStudentByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(studentService.getStudentByEmail(email));
     }
 
     @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")

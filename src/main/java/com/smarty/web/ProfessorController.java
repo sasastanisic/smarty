@@ -46,6 +46,12 @@ public class ProfessorController {
     }
 
     @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT', 'ADMIN')")
+    @GetMapping("/by-email")
+    public ResponseEntity<ProfessorResponseDTO> getProfessorByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(professorService.getProfessorByEmail(email));
+    }
+
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT', 'ADMIN')")
     @GetMapping("/by-course/{courseId}")
     public ResponseEntity<List<ProfessorResponseDTO>> getProfessorsByCourse(@PathVariable Long courseId) {
         return ResponseEntity.ok(professorService.getProfessorsByCourse(courseId));

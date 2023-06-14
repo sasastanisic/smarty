@@ -85,6 +85,17 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
+    public ProfessorResponseDTO getProfessorByEmail(String email) {
+        Professor professor = professorRepository.findByAccount_Email(email);
+
+        if (professor == null) {
+            throw new NotFoundException("Professor with email %s doesn't exist".formatted(email));
+        }
+
+        return professorMapper.toProfessorResponseDTO(professor);
+    }
+
+    @Override
     public void existsById(Long id) {
         if (!professorRepository.existsById(id)) {
             throw new NotFoundException(PROFESSOR_NOT_EXISTS.formatted(id));

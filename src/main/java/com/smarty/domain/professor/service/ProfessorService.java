@@ -20,6 +20,8 @@ public interface ProfessorService {
 
     Professor getById(Long id);
 
+    ProfessorResponseDTO getProfessorByEmail(String email);
+
     void existsById(Long id);
 
     List<ProfessorResponseDTO> getProfessorsByCourse(Long courseId);

@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 
+    Professor findByAccount_Email(String email);
+
     @Query("SELECT p FROM professor p " +
             "JOIN engagement e ON p.id = e.professor.id " +
             "JOIN course c ON e.course.id = c.id " +
