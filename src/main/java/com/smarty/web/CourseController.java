@@ -62,6 +62,12 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCoursesByProfessor(professorId));
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT')")
+    @GetMapping("/by-student/{studentId}")
+    public ResponseEntity<List<CourseResponseDTO>> getCoursesByStudent(@PathVariable Long studentId) {
+        return ResponseEntity.ok(courseService.getCoursesByStudent(studentId));
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable Long id, @Valid @RequestBody CourseUpdateDTO courseDTO) {

@@ -6,6 +6,7 @@ import com.smarty.domain.course.model.CourseResponseDTO;
 import com.smarty.domain.course.model.CourseUpdateDTO;
 import com.smarty.domain.course.repository.CourseRepository;
 import com.smarty.domain.professor.service.ProfessorService;
+import com.smarty.domain.student.service.StudentService;
 import com.smarty.infrastructure.handler.exceptions.ConflictException;
 import com.smarty.infrastructure.handler.exceptions.NotFoundException;
 import com.smarty.infrastructure.mapper.CourseMapper;
@@ -27,14 +28,17 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
     private final ProfessorService professorService;
+    private final StudentService studentService;
 
     @Autowired
     public CourseServiceImpl(CourseRepository courseRepository,
                              CourseMapper courseMapper,
-                             @Lazy ProfessorService professorService) {
+                             @Lazy ProfessorService professorService,
+                             @Lazy StudentService studentService) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
         this.professorService = professorService;
+        this.studentService = studentService;
     }
 
     @Override
@@ -140,6 +144,18 @@ public class CourseServiceImpl implements CourseService {
         }
 
         return getCourseListResponseDTO(coursesByProfessor);
+    }
+
+    @Override
+    public List<CourseResponseDTO> getCoursesByStudent(Long studentId) {
+        List<Course> coursesByStudent = courseRepository.findCoursesByStudent(studentId);
+        studentService.existsById(studentId);
+
+        if (coursesByStudent.isEmpty()) {
+            throw new NotFoundException("List of courses by student is empty");
+        }
+
+        return getCourseListResponseDTO(coursesByStudent);
     }
 
     private List<CourseResponseDTO> getCourseListResponseDTO(List<Course> courseList) {
