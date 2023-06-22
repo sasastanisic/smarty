@@ -27,6 +27,9 @@ public class Student {
     @Column(nullable = false)
     private int semester;
 
+    @Column(nullable = false)
+    private double averageGrade;
+
     @ManyToOne
     @JoinColumn(name = "major_id", nullable = false)
     private Major major;
@@ -88,6 +91,14 @@ public class Student {
 
     public void setSemester(int semester) {
         this.semester = semester;
+    }
+
+    public double getAverageGrade() {
+        return averageGrade;
+    }
+
+    public void setAverageGrade(double averageGrade) {
+        this.averageGrade = averageGrade;
     }
 
     public Major getMajor() {

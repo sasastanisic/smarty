@@ -94,6 +94,7 @@ public class StudentServiceImplTest {
         student.setIndex(4377);
         student.setYear(3);
         student.setSemester(6);
+        student.setAverageGrade(9.65);
         student.setMajor(major);
         student.setStatus(status);
         student.setAccount(account);
@@ -111,7 +112,7 @@ public class StudentServiceImplTest {
         StudentRequestDTO studentRequestDTO = new StudentRequestDTO("Sasa", "Stanisic", 4377, 3, 6, 1L, 1L, accountRequestDTO);
 
         AccountResponseDTO accountResponseDTO = new AccountResponseDTO("sasastanisic4@gmail.com", "$password123$", Role.STUDENT);
-        StudentResponseDTO studentResponseDTO = new StudentResponseDTO(1L, "Sasa", "Stanisic", 4377, 3, 6,
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO(1L, "Sasa", "Stanisic", 4377, 3, 6, 9.65,
                 new MajorResponseDTO(1L, "SE", "Software engineering", "Software engineering major", 4),
                 new Status(1L, "Traditional"), accountResponseDTO);
 
@@ -133,7 +134,7 @@ public class StudentServiceImplTest {
     void testGetAllStudents() {
         Pageable pageable = mock(Pageable.class);
         AccountResponseDTO accountResponseDTO = new AccountResponseDTO("sasastanisic4@gmail.com", "$password123$", Role.STUDENT);
-        StudentResponseDTO studentResponseDTO = new StudentResponseDTO(1L, "Sasa", "Stanisic", 4377, 3, 6,
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO(1L, "Sasa", "Stanisic", 4377, 3, 6, 9.65,
                 new MajorResponseDTO(1L, "SE", "Software engineering", "Software engineering major", 4),
                 new Status(1L, "Traditional"), accountResponseDTO);
 

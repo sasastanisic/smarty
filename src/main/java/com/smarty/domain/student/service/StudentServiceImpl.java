@@ -1,6 +1,5 @@
 package com.smarty.domain.student.service;
 
-import com.smarty.domain.account.entity.Account;
 import com.smarty.domain.account.service.AccountService;
 import com.smarty.domain.course.service.CourseService;
 import com.smarty.domain.major.service.MajorService;
@@ -66,6 +65,7 @@ public class StudentServiceImpl implements StudentService {
 
         var encryptedPassword = encodePassword(studentDTO.account().password());
 
+        setAverageGradeOfStudent(student);
         student.setMajor(major);
         student.setStatus(status);
         student.getAccount().setPassword(encryptedPassword);
@@ -77,6 +77,16 @@ public class StudentServiceImpl implements StudentService {
 
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    private void setAverageGradeOfStudent(Student student) {
+        var averageGrade = studentRepository.findAverageGradeOfStudent(student);
+
+        if (averageGrade == null) {
+            averageGrade = 0.0;
+        }
+
+        student.setAverageGrade(averageGrade);
     }
 
     private void validateIndex(int index) {
@@ -201,6 +211,18 @@ public class StudentServiceImpl implements StudentService {
         if (!password.matches(confirmedPassword)) {
             throw new NotFoundException("Passwords aren't matching");
         }
+    }
+
+    @Override
+    public void updateAverageGradeOfStudent(Student student) {
+        var averageGrade = studentRepository.findAverageGradeOfStudent(student);
+
+        if (averageGrade == null) {
+            averageGrade = 0.0;
+        }
+
+        student.setAverageGrade(averageGrade);
+        studentRepository.save(student);
     }
 
     @Override

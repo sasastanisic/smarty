@@ -69,6 +69,8 @@ public class ExamServiceImpl implements ExamService {
 
         examRepository.save(exam);
 
+        studentService.updateAverageGradeOfStudent(student);
+
         return examMapper.toExamResponseDTO(exam);
     }
 
@@ -184,6 +186,8 @@ public class ExamServiceImpl implements ExamService {
 
         validateTotalActivityPoints(exam.getStudent().getId(), exam.getCourse().getId());
         examRepository.save(exam);
+
+        studentService.updateAverageGradeOfStudent(exam.getStudent());
 
         return examMapper.toExamResponseDTO(exam);
     }

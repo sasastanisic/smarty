@@ -34,6 +34,8 @@ public interface StudentService {
 
     StudentResponseDTO updatePassword(Long id, PasswordDTO passwordDTO);
 
+    void updateAverageGradeOfStudent(Student student);
+
     void deleteStudent(Long id);
 
 }
