@@ -69,8 +69,6 @@ public class ExamServiceImpl implements ExamService {
 
         examRepository.save(exam);
 
-        studentService.updateAverageGradeOfStudent(student);
-
         return examMapper.toExamResponseDTO(exam);
     }
 
@@ -160,6 +158,18 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    public List<ExamResponseDTO> getExamHistoryByCourse(Long courseId) {
+        List<Exam> examHistoryByCourse = examRepository.findExamHistoryByCourse(courseId);
+        courseService.existsById(courseId);
+
+        if (examHistoryByCourse.isEmpty()) {
+            throw new NotFoundException("Exam history by course is empty");
+        }
+
+        return getExamListResponseDTO(examHistoryByCourse);
+    }
+
+    @Override
     public List<ExamResponseDTO> getPassedExamsByStudent(Long studentId, int year) {
         List<Exam> passedExamsByStudent = examRepository.findPassedExamsByStudent(studentId, year);
         studentService.existsById(studentId);
@@ -186,8 +196,6 @@ public class ExamServiceImpl implements ExamService {
 
         validateTotalActivityPoints(exam.getStudent().getId(), exam.getCourse().getId());
         examRepository.save(exam);
-
-        studentService.updateAverageGradeOfStudent(exam.getStudent());
 
         return examMapper.toExamResponseDTO(exam);
     }

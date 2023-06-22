@@ -46,6 +46,12 @@ public class StudentController {
     }
 
     @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT', 'ADMIN')")
+    @GetMapping("/average-grade/{id}")
+    public ResponseEntity<Double> getAverageGradeOfStudent(@PathVariable Long id) {
+        return ResponseEntity.ok(studentService.getAverageGradeOfStudent(id));
+    }
+
+    @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT', 'ADMIN')")
     @GetMapping("/by-email")
     public ResponseEntity<StudentResponseDTO> getStudentByEmail(@RequestParam String email) {
         return ResponseEntity.ok(studentService.getStudentByEmail(email));

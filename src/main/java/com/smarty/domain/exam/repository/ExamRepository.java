@@ -23,6 +23,10 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     List<Exam> findExamHistoryByStudent(Long studentId);
 
     @Query("SELECT e FROM exam e " +
+            "WHERE e.course.id = :courseId")
+    List<Exam> findExamHistoryByCourse(Long courseId);
+
+    @Query("SELECT e FROM exam e " +
             "WHERE e.student.id = :studentId AND e.course.year = :year AND e.grade > 5")
     List<Exam> findPassedExamsByStudent(Long studentId, int year);
 

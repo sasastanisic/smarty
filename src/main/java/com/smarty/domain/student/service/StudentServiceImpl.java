@@ -65,7 +65,6 @@ public class StudentServiceImpl implements StudentService {
 
         var encryptedPassword = encodePassword(studentDTO.account().password());
 
-        setAverageGradeOfStudent(student);
         student.setMajor(major);
         student.setStatus(status);
         student.getAccount().setPassword(encryptedPassword);
@@ -77,16 +76,6 @@ public class StudentServiceImpl implements StudentService {
 
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
-    }
-
-    private void setAverageGradeOfStudent(Student student) {
-        var averageGrade = studentRepository.findAverageGradeOfStudent(student);
-
-        if (averageGrade == null) {
-            averageGrade = 0.0;
-        }
-
-        student.setAverageGrade(averageGrade);
     }
 
     private void validateIndex(int index) {
@@ -113,6 +102,15 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return optionalStudent.get();
+    }
+
+    @Override
+    public Double getAverageGradeOfStudent(Long id) {
+        if (!studentRepository.existsById(id)) {
+            throw new NotFoundException(STUDENT_NOT_EXISTS.formatted(id));
+        }
+
+        return studentRepository.findAverageGradeOfStudent(id);
     }
 
     @Override
@@ -211,18 +209,6 @@ public class StudentServiceImpl implements StudentService {
         if (!password.matches(confirmedPassword)) {
             throw new NotFoundException("Passwords aren't matching");
         }
-    }
-
-    @Override
-    public void updateAverageGradeOfStudent(Student student) {
-        var averageGrade = studentRepository.findAverageGradeOfStudent(student);
-
-        if (averageGrade == null) {
-            averageGrade = 0.0;
-        }
-
-        student.setAverageGrade(averageGrade);
-        studentRepository.save(student);
     }
 
     @Override

@@ -12,7 +12,6 @@ public record StudentResponseDTO(
         int index,
         int year,
         int semester,
-        double averageGrade,
         MajorResponseDTO major,
         Status status,
         AccountResponseDTO account

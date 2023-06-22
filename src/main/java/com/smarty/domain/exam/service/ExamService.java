@@ -24,6 +24,8 @@ public interface ExamService {
 
     List<ExamResponseDTO> getExamHistoryByStudent(Long studentId);
 
+    List<ExamResponseDTO> getExamHistoryByCourse(Long courseId);
+
     List<ExamResponseDTO> getPassedExamsByStudent(Long studentId, int year);
 
     ExamResponseDTO updateExam(Long id, ExamUpdateDTO examDTO);

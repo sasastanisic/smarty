@@ -20,6 +20,8 @@ public interface StudentService {
 
     Student getById(Long id);
 
+    Double getAverageGradeOfStudent(Long id);
+
     StudentResponseDTO getStudentByEmail(String email);
 
     void existsById(Long id);
@@ -33,8 +35,6 @@ public interface StudentService {
     StudentResponseDTO updateStudent(Long id, StudentUpdateDTO studentDTO);
 
     StudentResponseDTO updatePassword(Long id, PasswordDTO passwordDTO);
-
-    void updateAverageGradeOfStudent(Student student);
 
     void deleteStudent(Long id);
 

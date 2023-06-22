@@ -50,6 +50,12 @@ public class ExamController {
         return ResponseEntity.ok(examService.getExamHistoryByStudent(studentId));
     }
 
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ASSISTANT')")
+    @GetMapping("/by-course/{courseId}")
+    public ResponseEntity<List<ExamResponseDTO>> getExamHistoryByCourse(@PathVariable Long courseId) {
+        return ResponseEntity.ok(examService.getExamHistoryByCourse(courseId));
+    }
+
     @PreAuthorize("hasAnyRole('STUDENT', 'PROFESSOR', 'ASSISTANT')")
     @GetMapping("/by-student-passed/{studentId}")
     public ResponseEntity<List<ExamResponseDTO>> getPassedExamsByStudent(@PathVariable Long studentId, @RequestParam int year) {

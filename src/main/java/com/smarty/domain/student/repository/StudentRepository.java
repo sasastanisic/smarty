@@ -25,7 +25,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("SELECT AVG(e.grade) FROM student s " +
             "JOIN exam e ON s.id = e.student.id " +
-            "WHERE e.grade > 5")
-    Double findAverageGradeOfStudent(Student student);
+            "WHERE e.grade > 5 AND s.id = :id")
+    Double findAverageGradeOfStudent(Long id);
 
 }
