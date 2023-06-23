@@ -106,9 +106,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Double getAverageGradeOfStudent(Long id) {
-        if (!studentRepository.existsById(id)) {
-            throw new NotFoundException(STUDENT_NOT_EXISTS.formatted(id));
-        }
+        existsById(id);
 
         return studentRepository.findAverageGradeOfStudent(id);
     }
@@ -213,9 +211,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void deleteStudent(Long id) {
-        if (!studentRepository.existsById(id)) {
-            throw new NotFoundException(STUDENT_NOT_EXISTS.formatted(id));
-        }
+        existsById(id);
 
         studentRepository.deleteById(id);
     }

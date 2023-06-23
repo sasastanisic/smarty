@@ -152,9 +152,7 @@ public class ProfessorServiceImpl implements ProfessorService {
 
     @Override
     public void deleteProfessor(Long id) {
-        if (!professorRepository.existsById(id)) {
-            throw new NotFoundException(PROFESSOR_NOT_EXISTS.formatted(id));
-        }
+        existsById(id);
 
         professorRepository.deleteById(id);
     }

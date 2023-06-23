@@ -84,9 +84,7 @@ public class MajorServiceImpl implements MajorService {
 
     @Override
     public void deleteMajor(Long id) {
-        if (!majorRepository.existsById(id)) {
-            throw new NotFoundException(MAJOR_NOT_EXISTS.formatted(id));
-        }
+        existsById(id);
 
         majorRepository.deleteById(id);
     }
