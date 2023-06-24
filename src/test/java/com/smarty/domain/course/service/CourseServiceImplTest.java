@@ -66,8 +66,9 @@ public class CourseServiceImplTest {
                 "Course about learning backend framework Spring and Spring Boot");
 
         when(courseMapper.toCourse(courseRequestDTO)).thenReturn(course);
+        when(courseRepository.existsByCode(courseRequestDTO.code())).thenReturn(false);
         when(courseRepository.save(course)).thenReturn(course);
-        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
+        doReturn(courseResponseDTO).when(courseMapper).toCourseResponseDTO(course);
 
         var createdCourseDTO = courseService.createCourse(courseRequestDTO);
 
@@ -79,7 +80,9 @@ public class CourseServiceImplTest {
         CourseRequestDTO courseRequestDTO = new CourseRequestDTO("IT355", "Web Systems 2", 8, 3, 6,
                 "Course about learning backend framework Spring and Spring Boot");
 
-        when(courseRepository.existsByCode("IT355")).thenReturn(true);
+        when(courseMapper.toCourse(courseRequestDTO)).thenReturn(course);
+        doReturn(true).when(courseRepository).existsByCode("IT355");
+
         Assertions.assertThrows(ConflictException.class, () -> courseService.createCourse(courseRequestDTO));
     }
 
@@ -88,8 +91,8 @@ public class CourseServiceImplTest {
         Pageable pageable = mock(Pageable.class);
         CourseResponseDTO courseResponseDTO = new CourseResponseDTO(1L, "IT355", "Web Systems 2", 8, 3, 6,
                 "Course about learning backend framework Spring and Spring Boot");
-        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
 
+        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
         var expectedCourses = courses.map(course -> courseMapper.toCourseResponseDTO(course));
         doReturn(courses).when(courseRepository).findAll(pageable);
         var coursePage = courseService.getAllCourses(pageable);
@@ -101,8 +104,8 @@ public class CourseServiceImplTest {
     void testGetCourseById() {
         CourseResponseDTO courseResponseDTO = new CourseResponseDTO(1L, "IT355", "Web Systems 2", 8, 3, 6,
                 "Course about learning backend framework Spring and Spring Boot");
-        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
 
+        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
         var expectedCourse = courseMapper.toCourseResponseDTO(course);
         doReturn(Optional.of(course)).when(courseRepository).findById(1L);
         var returnedCourse = courseService.getCourseById(1L);
@@ -126,7 +129,7 @@ public class CourseServiceImplTest {
         when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
         doCallRealMethod().when(courseMapper).updateCourseFromDTO(courseUpdateDTO, course);
         when(courseRepository.save(course)).thenReturn(course);
-        when(courseMapper.toCourseResponseDTO(course)).thenReturn(courseResponseDTO);
+        doReturn(courseResponseDTO).when(courseMapper).toCourseResponseDTO(course);
 
         var updatedCourseDTO = courseService.updateCourse(1L, courseUpdateDTO);
 
